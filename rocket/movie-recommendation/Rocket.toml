@@ -1,0 +1,2 @@
+[default.databases.movie_db]
+url = "postgres://postgres:password@localhost:5448/movie_db"

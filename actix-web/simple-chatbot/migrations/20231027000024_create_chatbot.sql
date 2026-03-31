@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS patterns (
+    id SERIAL PRIMARY KEY,
+    pattern VARCHAR(255) UNIQUE NOT NULL,
+    response TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS chat_logs (
+    id SERIAL PRIMARY KEY,
+    user_message TEXT NOT NULL,
+    bot_response TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);

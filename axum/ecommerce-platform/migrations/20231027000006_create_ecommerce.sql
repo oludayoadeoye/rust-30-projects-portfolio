@@ -1,0 +1,22 @@
+CREATE TABLE IF NOT EXISTS products (
+    id UUID PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    price DECIMAL(12,2) NOT NULL,
+    stock INTEGER NOT NULL DEFAULT 0,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS orders (
+    id UUID PRIMARY KEY,
+    status VARCHAR(50) NOT NULL DEFAULT 'PENDING',
+    total_price DECIMAL(12,2) NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS order_items (
+    id SERIAL PRIMARY KEY,
+    order_id UUID REFERENCES orders(id) ON DELETE CASCADE,
+    product_id UUID REFERENCES products(id),
+    quantity INTEGER NOT NULL,
+    price_at_order DECIMAL(12,2) NOT NULL
+);

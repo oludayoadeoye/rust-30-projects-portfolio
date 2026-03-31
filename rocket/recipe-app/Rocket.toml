@@ -1,0 +1,2 @@
+[default.databases.recipe_db]
+url = "postgres://postgres:password@localhost:5442/recipe_db"

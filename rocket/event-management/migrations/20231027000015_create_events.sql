@@ -1,0 +1,17 @@
+CREATE TABLE IF NOT EXISTS events (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    location VARCHAR(255) NOT NULL,
+    start_time TIMESTAMPTZ NOT NULL,
+    capacity INTEGER NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS attendees (
+    id SERIAL PRIMARY KEY,
+    event_id INTEGER REFERENCES events(id) ON DELETE CASCADE,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    registered_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);

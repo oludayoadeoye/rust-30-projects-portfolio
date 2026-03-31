@@ -1,0 +1,2 @@
+[default.databases.tip_db]
+url = "postgres://postgres:password@localhost:5446/tip_db"

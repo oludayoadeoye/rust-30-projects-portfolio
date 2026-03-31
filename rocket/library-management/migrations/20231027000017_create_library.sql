@@ -1,0 +1,25 @@
+CREATE TABLE IF NOT EXISTS books (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    author VARCHAR(255) NOT NULL,
+    isbn VARCHAR(20) UNIQUE NOT NULL,
+    total_copies INTEGER NOT NULL DEFAULT 1,
+    available_copies INTEGER NOT NULL DEFAULT 1,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS members (
+    id UUID PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS loans (
+    id SERIAL PRIMARY KEY,
+    book_id INTEGER REFERENCES books(id),
+    member_id UUID REFERENCES members(id),
+    loaned_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    due_at TIMESTAMPTZ NOT NULL,
+    returned_at TIMESTAMPTZ
+);

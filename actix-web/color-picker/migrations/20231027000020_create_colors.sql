@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS palettes (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    colors TEXT[] NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);

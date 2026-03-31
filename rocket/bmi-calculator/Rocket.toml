@@ -1,0 +1,2 @@
+[default.databases.bmi_db]
+url = "postgres://postgres:password@localhost:5444/bmi_db"

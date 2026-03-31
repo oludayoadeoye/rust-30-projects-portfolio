@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS quotes (
+    id SERIAL PRIMARY KEY,
+    text TEXT NOT NULL,
+    author VARCHAR(255) NOT NULL,
+    category VARCHAR(100),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);

@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS devices (
+    id UUID PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    device_type VARCHAR(100) NOT NULL,
+    state VARCHAR(255) NOT NULL,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS device_logs (
+    id SERIAL PRIMARY KEY,
+    device_id UUID REFERENCES devices(id) ON DELETE CASCADE,
+    old_state VARCHAR(255),
+    new_state VARCHAR(255) NOT NULL,
+    recorded_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);

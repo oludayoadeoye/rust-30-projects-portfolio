@@ -1,0 +1,2 @@
+[default.databases.contact_db]
+url = "postgres://postgres:password@localhost:5443/contact_db"

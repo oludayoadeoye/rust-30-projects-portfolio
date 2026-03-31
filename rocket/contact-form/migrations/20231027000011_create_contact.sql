@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS messages (
+    id SERIAL PRIMARY KEY,
+    sender_name VARCHAR(255) NOT NULL,
+    sender_email VARCHAR(255) NOT NULL,
+    subject VARCHAR(255) NOT NULL,
+    body TEXT NOT NULL,
+    status VARCHAR(50) NOT NULL DEFAULT 'NEW',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);

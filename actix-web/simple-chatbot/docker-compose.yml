@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: chatbot_db
+    ports:
+      - "5456:5432" # Unique port for simple-chatbot

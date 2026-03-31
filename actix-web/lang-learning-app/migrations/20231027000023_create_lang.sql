@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS vocabularies (
+    id SERIAL PRIMARY KEY,
+    word VARCHAR(255) NOT NULL,
+    translation VARCHAR(255) NOT NULL,
+    language VARCHAR(50) NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS lessons (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    difficulty INTEGER DEFAULT 1,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);

@@ -1,0 +1,2 @@
+[default.databases.event_db]
+url = "postgres://postgres:password@localhost:5447/event_db"

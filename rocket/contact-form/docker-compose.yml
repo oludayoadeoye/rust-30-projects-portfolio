@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: contact_db
+    ports:
+      - "5443:5432" # Unique port for contact-form

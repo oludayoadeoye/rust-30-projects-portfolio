@@ -1,0 +1,2 @@
+[default.databases.home_db]
+url = "postgres://postgres:password@localhost:5450/home_db"

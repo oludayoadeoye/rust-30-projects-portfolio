@@ -1,0 +1,2 @@
+[default.databases.library_db]
+url = "postgres://postgres:password@localhost:5449/library_db"

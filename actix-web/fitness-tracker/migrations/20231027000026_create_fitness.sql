@@ -1,0 +1,17 @@
+CREATE TABLE IF NOT EXISTS workouts (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    workout_date DATE NOT NULL DEFAULT CURRENT_DATE,
+    notes TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS exercises (
+    id SERIAL PRIMARY KEY,
+    workout_id INTEGER REFERENCES workouts(id) ON DELETE CASCADE,
+    name VARCHAR(255) NOT NULL,
+    sets INTEGER NOT NULL,
+    reps INTEGER NOT NULL,
+    weight_kg FLOAT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);

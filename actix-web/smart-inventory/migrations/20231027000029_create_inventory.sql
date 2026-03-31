@@ -1,0 +1,16 @@
+CREATE TABLE IF NOT EXISTS products (
+    id SERIAL PRIMARY KEY,
+    sku VARCHAR(100) UNIQUE NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    quantity INTEGER NOT NULL DEFAULT 0,
+    price DECIMAL(12,2) NOT NULL,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS inventory_logs (
+    id SERIAL PRIMARY KEY,
+    product_id INTEGER REFERENCES products(id) ON DELETE CASCADE,
+    change_amount INTEGER NOT NULL,
+    reason VARCHAR(255),
+    recorded_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);

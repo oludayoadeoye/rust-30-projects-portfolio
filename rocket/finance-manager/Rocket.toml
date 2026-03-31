@@ -1,0 +1,2 @@
+[default.databases.finance_db]
+url = "postgres://postgres:password@localhost:5451/finance_db"
