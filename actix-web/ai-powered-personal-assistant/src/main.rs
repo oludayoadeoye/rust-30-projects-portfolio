@@ -11,8 +11,8 @@ use common_utils::init_db;
 
 #[derive(OpenApi)]
 #[openapi(
-    paths(list_interactions, create_interaction),
-    components(schemas(Interaction, CreateInteraction))
+    paths(list_interactions, suggest_intent),
+    components(schemas(Interaction, CreateInteraction, SuggestionResponse, Intent))
 )]
 struct ApiDoc;
 
@@ -38,7 +38,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(pool_data.clone())
             .wrap(middleware::Logger::default())
             .service(list_interactions)
-            .service(create_interaction)
+            .service(suggest_intent)
             .service(
                 SwaggerUi::new("/swagger-ui/{_:.*}")
                     .url("/api-docs/openapi.json", ApiDoc::openapi()),

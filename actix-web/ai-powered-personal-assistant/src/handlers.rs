@@ -20,22 +20,42 @@ pub async fn list_interactions(pool: web::Data<PgPool>) -> Result<impl Responder
 
 #[utoipa::path(
     post,
-    path = "/interactions",
+    path = "/suggest",
     request_body = CreateInteraction,
     responses(
-        (status = 201, description = "Interaction recorded", body = Interaction)
+        (status = 200, description = "Intent suggested", body = SuggestionResponse)
     )
 )]
-#[post("/interactions")]
-pub async fn create_interaction(pool: web::Data<PgPool>, payload: web::Json<CreateInteraction>) -> Result<impl Responder, ApiError> {
-    let response = format!("Simulated AI response for: {}", payload.user_query);
-    let interaction = sqlx::query_as::<_, Interaction>(
-        "INSERT INTO interactions (user_query, ai_response, confidence_score) VALUES ($1, $2, $3) RETURNING *"
+#[post("/suggest")]
+pub async fn suggest_intent(pool: web::Data<PgPool>, payload: web::Json<CreateInteraction>) -> Result<impl Responder, ApiError> {
+    let query = payload.user_query.to_lowercase();
+    
+    // Deep Logic Simulation: Keyword-based Intent Classification
+    let (intent, recommendation, confidence) = if query.contains("meeting") || query.contains("schedule") || query.contains("calendar") {
+        (Intent::Schedule, "I've found a slot at 2 PM today. Should I book it?".to_string(), 0.95)
+    } else if query.contains("remind") || query.contains("don't forget") {
+        (Intent::Reminder, "I'll remind you about this in 1 hour.".to_string(), 0.88)
+    } else if query.contains("search") || query.contains("find") || query.contains("who is") {
+        (Intent::Search, "Searching the web for relevant information...".to_string(), 0.82)
+    } else if query.contains("email") || query.contains("send to") {
+        (Intent::Email, "Drafting an email to the recipient. Ready to send?".to_string(), 0.90)
+    } else {
+        (Intent::Other, "I'm not sure I understand. Could you rephrase?".to_string(), 0.40)
+    };
+
+    // Save interaction
+    sqlx::query(
+        "INSERT INTO interactions (user_query, ai_response, confidence_score) VALUES ($1, $2, $3)"
     )
     .bind(&payload.user_query)
-    .bind(response)
-    .bind(0.95)
-    .fetch_one(pool.get_ref())
+    .bind(&recommendation)
+    .bind(confidence)
+    .execute(pool.get_ref())
     .await?;
-    Ok(HttpResponse::Created().json(interaction))
+
+    Ok(HttpResponse::Ok().json(SuggestionResponse {
+        intent,
+        recommendation,
+        confidence,
+    }))
 }

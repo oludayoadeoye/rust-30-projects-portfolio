@@ -12,7 +12,23 @@ pub struct Interaction {
     pub created_at: DateTime<Utc>,
 }
 
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
+pub enum Intent {
+    Schedule,
+    Reminder,
+    Search,
+    Email,
+    Other,
+}
+
 #[derive(Debug, Deserialize, ToSchema)]
 pub struct CreateInteraction {
     pub user_query: String,
+}
+
+#[derive(Debug, Serialize, ToSchema)]
+pub struct SuggestionResponse {
+    pub intent: Intent,
+    pub recommendation: String,
+    pub confidence: f64,
 }
