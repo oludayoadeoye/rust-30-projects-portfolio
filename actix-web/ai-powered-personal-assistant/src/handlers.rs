@@ -2,6 +2,8 @@ use actix_web::{get, post, web, HttpResponse, Responder};
 use sqlx::PgPool;
 use crate::models::*;
 use common_utils::ApiError;
+use google_ai_rs::{Client, AsSchema};
+use serde::Deserialize;
 
 #[utoipa::path(
     get,
@@ -18,6 +20,13 @@ pub async fn list_interactions(pool: web::Data<PgPool>) -> Result<impl Responder
     Ok(HttpResponse::Ok().json(interactions))
 }
 
+#[derive(Debug, Deserialize, AsSchema)]
+pub struct StructuredIntent {
+    pub intent: String, // "Schedule", "Reminder", "Search", "Email", "Other"
+    pub recommendation: String,
+    pub confidence: f64,
+}
+
 #[utoipa::path(
     post,
     path = "/suggest",
@@ -28,19 +37,31 @@ pub async fn list_interactions(pool: web::Data<PgPool>) -> Result<impl Responder
 )]
 #[post("/suggest")]
 pub async fn suggest_intent(pool: web::Data<PgPool>, payload: web::Json<CreateInteraction>) -> Result<impl Responder, ApiError> {
-    let query = payload.user_query.to_lowercase();
+    let api_key = std::env::var("GOOGLE_API_KEY").map_err(|_| ApiError::Internal)?;
+    let client = Client::new(&api_key).await.map_err(|_| ApiError::Internal)?;
     
-    // Deep Logic Simulation: Keyword-based Intent Classification
-    let (intent, recommendation, confidence) = if query.contains("meeting") || query.contains("schedule") || query.contains("calendar") {
-        (Intent::Schedule, "I've found a slot at 2 PM today. Should I book it?".to_string(), 0.95)
-    } else if query.contains("remind") || query.contains("don't forget") {
-        (Intent::Reminder, "I'll remind you about this in 1 hour.".to_string(), 0.88)
-    } else if query.contains("search") || query.contains("find") || query.contains("who is") {
-        (Intent::Search, "Searching the web for relevant information...".to_string(), 0.82)
-    } else if query.contains("email") || query.contains("send to") {
-        (Intent::Email, "Drafting an email to the recipient. Ready to send?".to_string(), 0.90)
-    } else {
-        (Intent::Other, "I'm not sure I understand. Could you rephrase?".to_string(), 0.40)
+    // Use Gemini 1.5 Flash for fast structured analysis
+    let model = client.typed_model::<StructuredIntent>("gemini-1.5-flash");
+    
+    let prompt = format!(
+        "Analyze the following user query and return a structured JSON response with the intent, a helpful recommendation, and a confidence score (0.0 to 1.0).\
+        Valid intents: Schedule, Reminder, Search, Email, Other.\
+        User query: '{}'",
+        payload.user_query
+    );
+
+    let structured = model.generate_content(prompt).await.map_err(|e| {
+        log::error!("Gemini API error: {:?}", e);
+        ApiError::Internal
+    })?;
+
+    // Map to response model
+    let intent_enum = match structured.intent.as_str() {
+        "Schedule" => Intent::Schedule,
+        "Reminder" => Intent::Reminder,
+        "Search" => Intent::Search,
+        "Email" => Intent::Email,
+        _ => Intent::Other,
     };
 
     // Save interaction
@@ -48,14 +69,14 @@ pub async fn suggest_intent(pool: web::Data<PgPool>, payload: web::Json<CreateIn
         "INSERT INTO interactions (user_query, ai_response, confidence_score) VALUES ($1, $2, $3)"
     )
     .bind(&payload.user_query)
-    .bind(&recommendation)
-    .bind(confidence)
+    .bind(&structured.recommendation)
+    .bind(structured.confidence)
     .execute(pool.get_ref())
     .await?;
 
     Ok(HttpResponse::Ok().json(SuggestionResponse {
-        intent,
-        recommendation,
-        confidence,
+        intent: intent_enum,
+        recommendation: structured.recommendation,
+        confidence: structured.confidence,
     }))
 }

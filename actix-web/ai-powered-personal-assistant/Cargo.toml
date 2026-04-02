@@ -15,4 +15,6 @@ chrono = { version = "0.4", features = ["serde"] }
 dotenvy = "0.15"
 uuid = { version = "1.0", features = ["serde", "v4"] }
 env_logger = "0.11"
+log = "0.4"
+google-ai-rs = { version = "0.1.2", features = ["serde"] }
 common-utils = { path = "../common-utils" }
