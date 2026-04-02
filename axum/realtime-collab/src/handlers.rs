@@ -1,12 +1,14 @@
 use axum::{
-    extract::{Path, State},
+    extract::{Path, State, ws::{WebSocket, WebSocketUpgrade, Message}},
     http::StatusCode,
     response::IntoResponse,
     Json,
 };
 use sqlx::PgPool;
 use uuid::Uuid;
+use futures_util::{StreamExt, SinkExt};
 use crate::models::{Document, CreateDocument, UpdateDocument};
+use crate::AppState;
 
 #[utoipa::path(
     get,
@@ -88,7 +90,7 @@ pub async fn get_document(
     )
 )]
 pub async fn update_document(
-    State(pool): State<PgPool>,
+    State(state): State<AppState>,
     Path(id): Path<Uuid>,
     Json(payload): Json<UpdateDocument>,
 ) -> impl IntoResponse {
@@ -99,14 +101,19 @@ pub async fn update_document(
          WHERE id = $3 AND version = $4 RETURNING *"
     )
     .bind(payload.title)
-    .bind(payload.content)
+    .bind(&payload.content)
     .bind(id)
     .bind(payload.version)
-    .fetch_optional(&pool)
+    .fetch_optional(&state.pool)
     .await;
 
     match doc {
-        Ok(Some(doc)) => (StatusCode::OK, Json(doc)).into_response(),
+        Ok(Some(doc)) => {
+            // Broadcast the update to all connected clients
+            let msg = format!("update:{}", id);
+            let _ = state.tx.send(msg);
+            (StatusCode::OK, Json(doc)).into_response()
+        },
         Ok(None) => (StatusCode::CONFLICT, "Version mismatch or document not found").into_response(),
         Err(_) => (StatusCode::INTERNAL_SERVER_ERROR, "Error updating document").into_response(),
     }
@@ -132,4 +139,36 @@ pub async fn delete_document(
         Ok(_) => StatusCode::NO_CONTENT.into_response(),
         Err(_) => (StatusCode::INTERNAL_SERVER_ERROR, "Error deleting document").into_response(),
     }
+}
+
+pub async fn ws_handler(
+    ws: WebSocketUpgrade,
+    State(state): State<AppState>,
+) -> impl IntoResponse {
+    ws.on_upgrade(|socket| handle_socket(socket, state))
+}
+
+async fn handle_socket(socket: WebSocket, state: AppState) {
+    let (mut sender, mut receiver) = socket.split();
+    let mut rx = state.tx.subscribe();
+
+    let mut send_task = tokio::spawn(async move {
+        while let Ok(msg) = rx.recv().await {
+            if sender.send(Message::Text(msg)).await.is_err() {
+                break;
+            }
+        }
+    });
+
+    let mut recv_task = tokio::spawn(async move {
+        while let Some(Ok(Message::Text(text))) = receiver.next().await {
+            // Broadcast received messages (e.g. cursor positions, ephemeral edits)
+            let _ = state.tx.send(text);
+        }
+    });
+
+    tokio::select! {
+        _ = (&mut send_task) => recv_task.abort(),
+        _ = (&mut recv_task) => send_task.abort(),
+    };
 }

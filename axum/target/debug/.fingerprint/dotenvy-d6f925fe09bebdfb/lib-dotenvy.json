@@ -1,0 +1,1 @@
+{"rustc":488544866541264853,"features":"[]","declared_features":"[\"clap\", \"cli\"]","target":3618754987716034752,"profile":8276155916380437441,"path":5635491417237617368,"deps":[],"local":[{"CheckDepInfo":{"dep_info":"debug/.fingerprint/dotenvy-d6f925fe09bebdfb/dep-lib-dotenvy","checksum":false}}],"rustflags":[],"config":8247474407144887393,"compile_kind":0}

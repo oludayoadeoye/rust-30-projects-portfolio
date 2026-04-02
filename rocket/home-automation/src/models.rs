@@ -33,3 +33,24 @@ pub struct DeviceLog {
     pub new_state: String,
     pub recorded_at: DateTime<Utc>,
 }
+
+#[derive(Debug, Serialize, Deserialize, FromRow, ToSchema)]
+pub struct Rule {
+    pub id: i32,
+    pub source_device_id: Uuid,
+    pub condition_op: String,
+    pub threshold: String,
+    pub target_device_id: Uuid,
+    pub target_state: String,
+    pub enabled: bool,
+    pub created_at: DateTime<Utc>,
+}
+
+#[derive(Debug, Deserialize, ToSchema)]
+pub struct CreateRule {
+    pub source_device_id: Uuid,
+    pub condition_op: String,
+    pub threshold: String,
+    pub target_device_id: Uuid,
+    pub target_state: String,
+}

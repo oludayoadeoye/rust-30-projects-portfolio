@@ -16,8 +16,8 @@ pub struct Db(sqlx::PgPool);
 
 #[derive(OpenApi)]
 #[openapi(
-    paths(list_devices, create_device, update_device_state, list_logs),
-    components(schemas(Device, CreateDevice, UpdateState, DeviceLog))
+    paths(list_devices, create_device, update_device_state, list_logs, list_rules, create_rule),
+    components(schemas(Device, CreateDevice, UpdateState, DeviceLog, Rule, CreateRule))
 )]
 struct ApiDoc;
 
@@ -45,6 +45,59 @@ pub async fn create_device(mut db: Connection<Db>, device: Json<CreateDevice>) -
     .await
     .ok()
     .map(Json)
+}
+
+#[utoipa::path(get, path = "/rules")]
+#[get("/rules")]
+pub async fn list_rules(mut db: Connection<Db>) -> Option<Json<Vec<Rule>>> {
+    sqlx::query_as::<_, Rule>("SELECT * FROM rules WHERE enabled = TRUE")
+        .fetch_all(&mut **db)
+        .await
+        .ok()
+        .map(Json)
+}
+
+#[utoipa::path(post, path = "/rules", request_body = CreateRule)]
+#[post("/rules", data = "<rule>")]
+pub async fn create_rule(mut db: Connection<Db>, rule: Json<CreateRule>) -> Option<Json<Rule>> {
+    sqlx::query_as::<_, Rule>(
+        "INSERT INTO rules (source_device_id, condition_op, threshold, target_device_id, target_state) \
+         VALUES ($1, $2, $3, $4, $5) RETURNING *"
+    )
+    .bind(rule.source_device_id)
+    .bind(&rule.condition_op)
+    .bind(&rule.threshold)
+    .bind(rule.target_device_id)
+    .bind(&rule.target_state)
+    .fetch_one(&mut **db)
+    .await
+    .ok()
+    .map(Json)
+}
+
+async fn process_rules(tx: &mut Transaction<'_, Postgres>, device_id: uuid::Uuid, new_state: &str) -> Result<(), sqlx::Error> {
+    let rules = sqlx::query_as::<_, Rule>("SELECT * FROM rules WHERE source_device_id = $1 AND enabled = TRUE")
+        .bind(device_id)
+        .fetch_all(&mut **tx)
+        .await?;
+
+    for rule in rules {
+        let trigger = match rule.condition_op.as_str() {
+            ">" => new_state.parse::<f64>().unwrap_or(0.0) > rule.threshold.parse::<f64>().unwrap_or(0.0),
+            "<" => new_state.parse::<f64>().unwrap_or(0.0) < rule.threshold.parse::<f64>().unwrap_or(0.0),
+            "==" => new_state == rule.threshold,
+            _ => false,
+        };
+
+        if trigger {
+            sqlx::query("UPDATE devices SET state = $1, updated_at = NOW() WHERE id = $2")
+                .bind(&rule.target_state)
+                .bind(rule.target_device_id)
+                .execute(&mut **tx)
+                .await?;
+        }
+    }
+    Ok(())
 }
 
 #[utoipa::path(put, path = "/devices/{id}/state", request_body = UpdateState)]
@@ -79,6 +132,9 @@ pub async fn update_device_state(mut db: Connection<Db>, id: uuid::Uuid, payload
             .await
             .map_err(|_| Status::InternalServerError)?;
 
+        // 4. Process Automation Rules (Deep Logic)
+        process_rules(&mut tx, id, &payload.state).await.map_err(|_| Status::InternalServerError)?;
+
         tx.commit().await.map_err(|_| Status::InternalServerError)?;
         Ok(Json(device))
     } else {
@@ -101,6 +157,6 @@ pub async fn list_logs(mut db: Connection<Db>, id: uuid::Uuid) -> Option<Json<Ve
 fn rocket() -> _ {
     rocket::build()
         .attach(Db::init())
-        .mount("/", routes![list_devices, create_device, update_device_state, list_logs])
+        .mount("/", routes![list_devices, create_device, update_device_state, list_logs, list_rules, create_rule])
         .mount("/", SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", ApiDoc::openapi()))
 }

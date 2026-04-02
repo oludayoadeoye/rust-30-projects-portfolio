@@ -1,0 +1,7 @@
+CREATE TABLE drones (
+    id SERIAL PRIMARY KEY,
+    drone_id TEXT NOT NULL,
+    status TEXT NOT NULL,
+    battery_level DOUBLE PRECISION NOT NULL,
+    last_telemetry TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);

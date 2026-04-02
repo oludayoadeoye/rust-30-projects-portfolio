@@ -24,11 +24,19 @@ pub struct CreateAccount {
 pub struct TransactionRecord {
     pub id: i32,
     pub account_id: Uuid,
-    pub amount: Decimal,
-    pub description: String,
-    pub category: String,
+    pub amount: f64,
+    pub description: Option<String>,
+    pub category: Option<String>,
     pub transaction_date: DateTime<Utc>,
 }
+
+#[derive(Debug, Serialize, ToSchema)]
+pub struct ForecastResponse {
+    pub current_balance: f64,
+    pub monthly_average: f64,
+    pub projections: Vec<f64>, // Balance for next 6 months
+}
+
 
 #[derive(Debug, Deserialize, ToSchema)]
 pub struct CreateTransaction {

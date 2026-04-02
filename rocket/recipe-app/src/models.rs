@@ -19,4 +19,11 @@ pub struct CreateRecipe {
     pub ingredients: serde_json::Value,
 }
 
+#[derive(Debug, Deserialize, ToSchema)]
+pub struct UpdateRecipe {
+    pub title: Option<String>,
+    pub instructions: Option<String>,
+    pub ingredients: Option<serde_json::Value>,
+}
+
 

@@ -1,0 +1,7 @@
+CREATE TABLE players (
+    id SERIAL PRIMARY KEY,
+    username TEXT NOT NULL,
+    score INTEGER NOT NULL,
+    level INTEGER NOT NULL,
+    last_login TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);

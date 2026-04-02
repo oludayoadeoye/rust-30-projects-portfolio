@@ -1,0 +1,15 @@
+[workspace]
+members = [
+    "todo-list",
+    "weather-app",
+    "calculator",
+    "currency-converter",
+    "notes-app",
+    "chat-app",
+    "ecommerce-platform",
+    "task-manager",
+    "realtime-collab",
+    "blockchain-voting",
+    "common-utils", "personal-blog", "quiz-app", "expense-tracker", "unit-converter", "simple-blogging", "digital-clock", "simple-survey", "simple-reminder", "basic-photo-gallery", "markdown-previewer", "temp-converter", "interest-calculator", "todo-local-storage",
+]
+resolver = "2"

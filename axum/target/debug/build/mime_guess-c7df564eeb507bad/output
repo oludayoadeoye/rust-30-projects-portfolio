@@ -1,0 +1,1 @@
+cargo:rustc-env=MIME_TYPES_GENERATED_PATH=/Users/champion/RustPractise/axum/target/debug/build/mime_guess-c7df564eeb507bad/out/mime_types_generated.rs

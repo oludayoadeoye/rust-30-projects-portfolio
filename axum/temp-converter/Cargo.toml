@@ -1,0 +1,18 @@
+[package]
+name = "temp-converter"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+axum = "0.7"
+tokio = { version = "1.0", features = ["full"] }
+sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "postgres", "macros", "chrono", "uuid"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+utoipa = { version = "4.1", features = ["axum_extras"] }
+utoipa-swagger-ui = { version = "6.0", features = ["axum"] }
+chrono = { version = "0.4", features = ["serde"] }
+dotenvy = "0.15"
+common-utils = { path = "../common-utils" }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }

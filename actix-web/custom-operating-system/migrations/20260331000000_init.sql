@@ -1,0 +1,8 @@
+CREATE TABLE processes (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    status TEXT NOT NULL,
+    cpu_usage DOUBLE PRECISION NOT NULL,
+    memory_usage DOUBLE PRECISION NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);

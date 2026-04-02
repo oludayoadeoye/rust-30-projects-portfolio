@@ -1,0 +1,7 @@
+CREATE TABLE datasets (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    row_count INTEGER NOT NULL,
+    status TEXT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);

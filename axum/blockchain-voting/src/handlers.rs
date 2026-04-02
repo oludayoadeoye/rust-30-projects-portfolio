@@ -85,15 +85,46 @@ pub async fn cast_vote(
     )
 )]
 pub async fn get_stats(State(pool): State<PgPool>) -> impl IntoResponse {
-    let count = sqlx::query_scalar::<_, i64>("SELECT COUNT(*) FROM blocks")
-        .fetch_one(&pool)
-        .await
-        .unwrap_or(0);
+    let blocks = sqlx::query_as::<_, Block>("SELECT * FROM blocks ORDER BY block_index ASC")
+        .fetch_all(&pool)
+        .await;
 
-    // Simplistic validity check
+    let mut is_valid = true;
+    let mut total_votes = 0;
+
+    if let Ok(blocks) = blocks {
+        total_votes = blocks.len() as i64;
+        let mut prev_hash = "0".to_string();
+
+        for block in blocks {
+            // 1. Check prev_hash matches
+            if block.prev_hash != prev_hash {
+                is_valid = false;
+                break;
+            }
+
+            // 2. Re-calculate hash and check it matches block_hash
+            let calculated = calculate_hash(
+                block.block_index,
+                &block.voter_id,
+                &block.candidate,
+                &block.prev_hash
+            );
+
+            if calculated != block.block_hash {
+                is_valid = false;
+                break;
+            }
+
+            prev_hash = block.block_hash;
+        }
+    } else {
+        return (StatusCode::INTERNAL_SERVER_ERROR, "Error fetching blockchain").into_response();
+    }
+
     let stats = BlockchainStats {
-        total_votes: count,
-        is_valid: true, // In a real app, we'd verify all hashes here
+        total_votes,
+        is_valid,
     };
 
     (StatusCode::OK, Json(stats)).into_response()

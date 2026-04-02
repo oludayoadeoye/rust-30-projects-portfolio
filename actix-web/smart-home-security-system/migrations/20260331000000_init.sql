@@ -1,0 +1,7 @@
+CREATE TABLE devices (
+    id SERIAL PRIMARY KEY,
+    name TEXT UNIQUE NOT NULL,
+    type_name TEXT NOT NULL,
+    status TEXT NOT NULL,
+    last_seen TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);

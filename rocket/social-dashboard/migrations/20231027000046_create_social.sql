@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS platforms (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) UNIQUE NOT NULL,
+    handle VARCHAR(100) NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS metrics (
+    id SERIAL PRIMARY KEY,
+    platform_id INTEGER REFERENCES platforms(id) ON DELETE CASCADE,
+    followers INTEGER DEFAULT 0,
+    likes INTEGER DEFAULT 0,
+    posts_count INTEGER DEFAULT 0,
+    recorded_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);

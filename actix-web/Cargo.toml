@@ -1,0 +1,27 @@
+[workspace]
+members = [
+    "color-picker",
+    "flashcard-app",
+    "url-shortener",
+    "lang-learning-app",
+    "simple-chatbot",
+    "restaurant-res",
+    "fitness-tracker",
+    "job-board",
+    "healthcare-mgmt",
+    "smart-inventory",
+    "advanced-ecommerce-platform",
+    "custom-operating-system",
+    "ai-powered-personal-assistant",
+    "real-time-stock-market-analysis-tool",
+    "virtual-reality-game",
+    "autonomous-drone-control-system",
+    "speech-recognition-system",
+    "cybersecurity-monitoring-tool",
+    "real-time-language-translation-app",
+    "advanced-analytics-platform",
+    "automated-trading-system",
+    "smart-home-security-system",
+    "common-utils",
+]
+resolver = "2"

@@ -1,0 +1,14 @@
+CREATE TABLE IF NOT EXISTS albums (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS photos (
+    id SERIAL PRIMARY KEY,
+    album_id INTEGER REFERENCES albums(id) ON DELETE CASCADE,
+    title VARCHAR(255) NOT NULL,
+    url TEXT NOT NULL,
+    uploaded_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);

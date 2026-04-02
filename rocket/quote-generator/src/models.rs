@@ -19,4 +19,11 @@ pub struct CreateQuote {
     pub category: Option<String>,
 }
 
+#[derive(Debug, Deserialize, ToSchema)]
+pub struct UpdateQuote {
+    pub text: Option<String>,
+    pub author: Option<String>,
+    pub category: Option<String>,
+}
+
 

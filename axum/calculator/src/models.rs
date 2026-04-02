@@ -17,4 +17,10 @@ pub struct CreateCalculation {
     pub result: f64,
 }
 
+#[derive(Debug, Deserialize, ToSchema)]
+pub struct UpdateCalculation {
+    pub expression: Option<String>,
+    pub result: Option<f64>,
+}
+
 

@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS alarms (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    alarm_time TIME NOT NULL,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);

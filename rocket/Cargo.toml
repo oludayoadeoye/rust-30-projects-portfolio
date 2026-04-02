@@ -1,0 +1,15 @@
+[workspace]
+members = [
+    "recipe-app",
+    "contact-form",
+    "bmi-calculator",
+    "quote-generator",
+    "tip-calculator",
+    "event-management",
+    "movie-recommendation",
+    "library-management",
+    "home-automation",
+    "finance-manager",
+    "common-utils", "random-number", "rocket-expense-tracker", "rocket-blogging", "social-dashboard", "online-voting", "portfolio-website", "online-forum", "rocket-cms", "ml-chatbot", "image-recognition", "ar-app", "nlp-tool",
+]
+resolver = "2"
