@@ -11,8 +11,8 @@ use common_utils::init_db;
 
 #[derive(OpenApi)]
 #[openapi(
-    paths(list_stocks, update_stock),
-    components(schemas(Stock, UpdateStock))
+    paths(list_stocks, analyze_stock),
+    components(schemas(Stock, UpdateStock, AnalysisResponse))
 )]
 struct ApiDoc;
 
@@ -38,7 +38,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(pool_data.clone())
             .wrap(middleware::Logger::default())
             .service(list_stocks)
-            .service(update_stock)
+            .service(analyze_stock)
             .service(
                 SwaggerUi::new("/swagger-ui/{_:.*}")
                     .url("/api-docs/openapi.json", ApiDoc::openapi()),

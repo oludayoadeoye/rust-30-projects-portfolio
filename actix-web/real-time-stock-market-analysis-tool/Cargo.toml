@@ -15,4 +15,9 @@ chrono = { version = "0.4", features = ["serde"] }
 dotenvy = "0.15"
 uuid = { version = "1.0", features = ["serde", "v4"] }
 env_logger = "0.11"
+log = "0.4"
+yfinance-rs = { version = "0.7.2", features = ["dataframe"] }
+paft = { version = "0.7.1", features = ["dataframe", "market"] }
+polars = { version = "0.51", features = ["lazy", "temporal", "rolling_window"] }
+futures-util = "0.3"
 common-utils = { path = "../common-utils" }

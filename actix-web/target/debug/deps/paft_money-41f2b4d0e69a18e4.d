@@ -1,0 +1,11 @@
+/Users/champion/RustPractise/actix-web/target/debug/deps/paft_money-41f2b4d0e69a18e4.d: /Users/champion/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/paft-money-0.7.1/src/lib.rs /Users/champion/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/paft-money-0.7.1/src/locale.rs /Users/champion/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/paft-money-0.7.1/src/currency.rs /Users/champion/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/paft-money-0.7.1/src/currency_utils.rs /Users/champion/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/paft-money-0.7.1/src/decimal.rs /Users/champion/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/paft-money-0.7.1/src/error.rs /Users/champion/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/paft-money-0.7.1/src/money.rs
+
+/Users/champion/RustPractise/actix-web/target/debug/deps/libpaft_money-41f2b4d0e69a18e4.rmeta: /Users/champion/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/paft-money-0.7.1/src/lib.rs /Users/champion/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/paft-money-0.7.1/src/locale.rs /Users/champion/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/paft-money-0.7.1/src/currency.rs /Users/champion/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/paft-money-0.7.1/src/currency_utils.rs /Users/champion/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/paft-money-0.7.1/src/decimal.rs /Users/champion/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/paft-money-0.7.1/src/error.rs /Users/champion/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/paft-money-0.7.1/src/money.rs
+
+/Users/champion/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/paft-money-0.7.1/src/lib.rs:
+/Users/champion/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/paft-money-0.7.1/src/locale.rs:
+/Users/champion/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/paft-money-0.7.1/src/currency.rs:
+/Users/champion/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/paft-money-0.7.1/src/currency_utils.rs:
+/Users/champion/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/paft-money-0.7.1/src/decimal.rs:
+/Users/champion/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/paft-money-0.7.1/src/error.rs:
+/Users/champion/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/paft-money-0.7.1/src/money.rs:
