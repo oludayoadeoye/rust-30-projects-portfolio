@@ -1,1 +1,0 @@
-{"rustc":488544866541264853,"features":"[]","declared_features":"[\"default\", \"schemars\", \"serde\"]","target":14708861608557204338,"profile":8276155916380437441,"path":7517171067180171815,"deps":[],"local":[{"CheckDepInfo":{"dep_info":"debug/.fingerprint/isin-48a0b9136311d833/dep-lib-isin","checksum":false}}],"rustflags":[],"config":8247474407144887393,"compile_kind":0}

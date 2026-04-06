@@ -1,0 +1,20 @@
+# Rust
+**/target/
+**/*.rs.bk
+Cargo.lock
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment
+.env
+.env.local
+
+# Java/Kotlin (Future)
+**/build/
+**/*.class
+**/*.jar
+.gradle/
