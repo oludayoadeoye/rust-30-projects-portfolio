@@ -1,0 +1,20 @@
+name: CodeRabbit CI
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  issue_comment:
+    types: [created]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      - name: CodeRabbit Review
+        uses: coderabbitai/ai-pr-reviewer@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Note: coderabbitai/ai-pr-reviewer requires CODERABBIT_API_KEY in repo secrets for advanced features.
+          # Default GitHub Token allows basic PR labeling and comments.
