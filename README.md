@@ -1,3 +1,4 @@
+# ⭐️ [Please Star this Repo!](https://github.com/oludayoadeoye/rust-67-deep-logic-portfolio)
 # Rust 67-Project Deep Logic Portfolio
 
 ## 🚀 The Journey: From 30 CRUDs to 67 Advanced Systems
